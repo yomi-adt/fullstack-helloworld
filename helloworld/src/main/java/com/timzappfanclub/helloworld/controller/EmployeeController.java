@@ -3,6 +3,7 @@ package com.timzappfanclub.helloworld.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,21 +25,20 @@ public class EmployeeController {
     // Build add employee API
     // This annotation maps POST http request to this method
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto){
-        System.out.println(employeeDto.getEmail() + employeeDto.getFirstName() + employeeDto.getLastName());
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody /* Maps this param to request body. Converts JSON to EmployeeDto object */ EmployeeDto employeeDto){
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
 
         // Returns a response entity
-        // TODO: Look at ResponseEntity documentation and what this constructor does
+        // Generic type that sends an HTTP response. For more documentation, see
+        // https://www.geeksforgeeks.org/how-to-use-spring-responseentity-to-manipulate-the-http-response/
+        // https://stackoverflow.com/questions/26550124/spring-returning-empty-http-responses-with-responseentityvoid-doesnt-work
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<EmployeeDto> createEmployeeTest(){
-        EmployeeDto savedEmployee = employeeService.createEmployee(new EmployeeDto("Nik", "Get", "bruh@gmail.com"));
-
-        // Returns a response entity
-        // TODO: Look at ResponseEntity documentation and what this constructor does
-        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+    // Build Get Employee REST API
+    @GetMapping("{id}") // Adds on to request mapping. So GET /api/employees/{id} maps to this function call
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") /* Maps this variable to the id passed in the path */ long employeeId){
+        EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
+        return ResponseEntity.ok(employeeDto);
     }
 }

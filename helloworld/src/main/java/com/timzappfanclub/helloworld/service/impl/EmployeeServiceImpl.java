@@ -9,6 +9,7 @@ import com.timzappfanclub.helloworld.dto.EmployeeDto;
 import com.timzappfanclub.helloworld.mapper.EmployeeMapper;
 import com.timzappfanclub.helloworld.repository.EmployeeRepository;
 import com.timzappfanclub.helloworld.entity.Employee;
+import com.timzappfanclub.helloworld.exception.ResourceNotFoundException;
 
 // This annotation tells the container to create the Spring Bean for this class
 @Service
@@ -24,5 +25,23 @@ public class EmployeeServiceImpl implements EmployeeService{
         Employee savedEmployee = employeeRepository.save(employee); // Returns the saved employee object
 
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeById(Long employeeId){
+        // Built in CRUD method for finding by ID
+        Employee employee = employeeRepository.findById(employeeId)
+        /*
+         * Two things here:
+         * 
+         * 1) .orElseThrow() is a "method chain". employeeRepository.findById() returns an Optional<> class, then Optional<>.orElseThrow() is invoked
+         * 
+         * 2) Lambda expression (params) -> expression. Basically: API provides a method with an interface, while user of API can define functionality
+         * In this case: Optional.orElseThrow() defines the interface where if Optional is not empty, the returns contents of Optional. Otherwise, throws
+         * specified exception. In the expression, user defines what exception to throw (ResourceNotFoundException) 
+         */
+            .orElseThrow(() -> new ResourceNotFoundException("Employee with that ID does not exist in database."));
+        
+        return EmployeeMapper.mapToEmployeeDto(employee);
     }
 }
