@@ -54,4 +54,20 @@ public class EmployeeServiceImpl implements EmployeeService{
         // I hate this, but basically for every employee from db returned, convert to EmployeeDto and return as a List<>
         return employees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDto(employee)).collect(Collectors.toList());
     }
+
+    @Override
+    public EmployeeDto updateEmployee(Long employeeId, EmployeeDto updatedEmployee){
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException("Employee not found. Id: "+ employeeId));
+
+        // Update the returned employee's data
+        employee.setFirstName(updatedEmployee.getFirstName());
+        employee.setLastName(updatedEmployee.getLastName());
+        employee.setEmail(updatedEmployee.getEmail());
+
+        // Built in CRUD method
+        // Note that the employee object has an ID attached to it. What likely happens is that this id
+        // is searched for in db and columns are updated
+        Employee updatedEmployeeObj = employeeRepository.save(employee);
+        return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);
+    }
 }
