@@ -1,5 +1,6 @@
 package com.timzappfanclub.helloworld.controller;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,8 @@ import com.timzappfanclub.helloworld.service.EmployeeService;
 import com.timzappfanclub.helloworld.dto.EmployeeDto;
 
 import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 // Makes this class capable of handling HTTP requests
 @RestController
@@ -40,5 +43,12 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") /* Maps this variable to the id passed in the path */ long employeeId){
         EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
         return ResponseEntity.ok(employeeDto);
+    }
+
+    // Build Get all Employees REST API
+    @GetMapping
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
+        List<EmployeeDto> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
     }
 }

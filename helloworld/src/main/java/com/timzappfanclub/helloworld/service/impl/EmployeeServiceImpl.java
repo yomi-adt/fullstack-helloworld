@@ -4,6 +4,9 @@ import com.timzappfanclub.helloworld.service.EmployeeService;
 
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import com.timzappfanclub.helloworld.dto.EmployeeDto;
 import com.timzappfanclub.helloworld.mapper.EmployeeMapper;
@@ -43,5 +46,12 @@ public class EmployeeServiceImpl implements EmployeeService{
             .orElseThrow(() -> new ResourceNotFoundException("Employee with that ID does not exist in database."));
         
         return EmployeeMapper.mapToEmployeeDto(employee);
+    }
+
+    @Override
+    public List<EmployeeDto> getAllEmployees(){
+        List<Employee> employees = employeeRepository.findAll();
+        // I hate this, but basically for every employee from db returned, convert to EmployeeDto and return as a List<>
+        return employees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDto(employee)).collect(Collectors.toList());
     }
 }
