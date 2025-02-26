@@ -1,8 +1,8 @@
 package com.timzappfanclub.helloworld.controller;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +24,9 @@ import java.util.List;
 // Defines the base URL that calls this class
 @RequestMapping("/api/employees")
 @AllArgsConstructor
+
+// Solve CORS
+@CrossOrigin("*")
 public class EmployeeController {
     private EmployeeService employeeService;
 
